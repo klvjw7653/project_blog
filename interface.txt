@@ -1,0 +1,612 @@
+[기능 설명]
+
+1. SignIn(로그인)
+    -request
+        {
+            *이메일 주소: String,
+            *비밀번호 : String
+        }
+    -response
+
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            token:"jwt"
+            expiredDate:123456789  ?알아보기
+        }
+    
+    실패: 필수 정보 미입력
+
+
+        {(Http Status - 401[Unauthorized])-로그인 실패
+            
+            코드: "SF"
+            message:"Sign IN Failed."
+        }
+
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }
+
+        
+2. SignUp(회원가입)
+    -request
+        {
+            *email: String,
+            *password: String,
+            *nickname: String,
+            *telNumber: String,(전화번호 시작이 0부터 시작이므로 정수형이 될 수 없다.),
+            *address: String,
+             addressDetail: String
+
+        }
+    -response
+      
+      성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+        }
+
+      실패 : 필수 정보 미입력/이메일 포멧 불일치 / 비밀번호 8자 미만 / 전화번호 포멧 불일치
+
+        {(Http Status - 400[Bad Request])-이메일 중복
+            
+            코드: "EE"
+            message:"Existed Email."
+        }
+
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }
+
+
+
+3. weeklyTop3List (주간 상위 3 게시물 리스트)
+    -response
+
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            top3List:boardListItem[]
+        }
+
+        boardListItem
+        {   
+            boardNumber: int,
+            title: String,
+            content: String,
+            boardTitleImage: string,
+            favoriteCount:Int,
+            commentCount: Int,
+            viewcount: Int,
+            writeDatetime: String,
+            writeNickname: String,
+            writerProfileImage: String
+        }
+
+    실패
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }
+
+4. currentList(최신 게시물)
+    
+    -response
+
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            currentList:boardListItem[]
+        }
+
+        boardListItem
+        {   
+            boardNumber: int,
+            title: String,
+            content: String,
+            boardTitleImage: string,
+            favoriteCount:Int,
+            commentCount: Int,
+            viewcount: Int,
+            writeDatetime: String,
+            writeNickname: String,
+            writerProfileImage: String
+        }
+    
+    실패
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }
+
+5. popularwordList(인기 검색어 리스트)
+
+    -response
+
+    성공
+
+      {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            popularwordList:String[]
+       }
+
+    실패
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+
+
+
+     
+6. SearchList(검색 게시물 리스트 기능)
+
+     -response
+
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            searchList:boardListItem[]
+        }
+
+        boardListItem
+        {   
+            boardNumber: int,
+            title: String,
+            content: String,
+            boardTitleImage: string,
+            favoriteCount:Int,
+            commentCount: Int,
+            viewcount: Int,
+            writeDatetime: String,
+            writeNickname: String,
+            writerProfileImage: String
+        }
+    
+    실패
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+
+
+7. relativeWordList(관련 검색어 리스트)
+
+    -response
+
+    성공
+
+      {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            relativeWordList:String[]
+       }
+
+    실패
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+
+8. boardDetail(게시물 상세)
+    -response
+
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            boardNumber: int,
+            title: String,
+            content: String,
+            boardImage: string[],
+            writeDatetime: String,
+            writerEmail: String,
+            writeNickname: String,
+            writerProfileImage: String
+        }
+
+    실패
+        {(Http Status - 400[Bad Request]) - 존재하지 않는 게시물
+            
+            코드: "NB"
+            message:"No Existed Board Number."
+        }
+
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }    
+
+9. favoriteList(좋아요 리스트)
+
+    -response
+
+    성공
+
+      {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            favoriteList:FavoriteListItem[]
+       }
+
+       FavoriteListItem{
+            email:string,
+            nickname:string,
+            profileImage: string
+
+       }
+    
+    실패
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+
+    +putfavorite(좋아요 기능)
+       -request
+
+       {
+        boardNumber : int
+       }
+       
+       -response
+
+        성공
+        
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."   
+        }
+
+
+        실패
+            
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }    
+
+10. commentList(댓글 리스트)
+
+    -response
+        
+        성공
+        
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            commentList: CommentListItem[]
+        }
+
+        CommentListItem{
+
+            email: string,
+            nickname: string,
+            writeDatetime: string,
+            conetent: string
+        }
+
+
+        실패
+            
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }    
+
+
+
+    +postComment(댓글 쓰기)
+
+        -request
+        {
+            *content:String
+        }
+
+        -response
+        
+        성공
+        
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+         
+        }
+
+        실패
+        {(Http Status - 400[Bad Request])-존재하지 않는 게시물
+            
+            코드: "NB"
+            message:"No Existed Board."
+        } 
+
+        {(Http Status - 400[Bad Request])-존재하지 않는 User
+            
+            코드: "NU"
+            message:"No Existed User."
+        }   
+            
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }    
+    
+11. boardDetail(게시물 삭제)
+
+    -response
+
+    성공
+        
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+         
+        }
+
+    실패
+        {(Http Status - 400[Bad Request])-존재하지 않는 게시물
+            
+            코드: "NB"
+            message:"No Existed Board."
+        } 
+
+        {(Http Status - 400[Bad Request])-존재하지 않는 User
+            
+            코드: "NU"
+            message:"No Existed User."
+        }
+        
+        {(Http Status - 403[Forbidden])-권한 없음
+            
+            코드: "NP"
+            message:"No Permission."
+        }    
+            
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+
+
+
+12. boardWrite(게시물 쓰기)
+
+    -request
+        {
+            *title: String,
+            *content: String,
+            boardImageList:String[]
+        }
+
+    -response
+
+    성공
+        
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+         
+        }
+
+
+
+     실패
+      
+        {(Http Status - 400[Bad Request])-존재하지 않는 User
+            
+            코드: "NU"
+            message:"No Existed User."
+        }
+            
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+
+    
+13. boardUpdate(게시물 수정)
+
+    -request
+        {
+            *title: String,
+            *content: String,
+            boardImageList:String[]
+        }
+
+    -response
+
+    성공
+        
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+         
+        }
+
+    실패
+        {(Http Status - 400[Bad Request])-존재하지 않는 게시물
+            
+            코드: "NB"
+            message:"No Existed Board."
+        } 
+
+        {(Http Status - 400[Bad Request])-존재하지 않는 User
+            
+            코드: "NU"
+            message:"No Existed User."
+        }
+
+	{(Http Status - 401[Unauthorized])-권한 없음
+            
+            코드: "AF"
+            message:"Authorization failed."
+        }    
+        
+        {(Http Status - 403[Forbidden])-권한 없음
+            
+            코드: "NP"
+            message:"Do not have Permission."
+        }    
+            
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+
+14. getUser (유저 정보 불러오기)
+
+    -response
+
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success.",
+            email: string,
+            nickname: string,
+            profileImage: string
+        }
+
+    실패
+        {(Http Status - 400[Bad Request])-존재하지 않는 User
+            
+            코드: "NU"
+            message:"No Existed User."
+        }
+
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        } 
+
+
+15. userBoardList (특정 유저 게시물 불러오기)
+
+     -response
+
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+            boardList:boardListItem[]
+        }
+
+        boardListItem
+        {   
+            boardNumber: int,
+            title: String,
+            content: String,
+            boardTitleImage: string,
+            favoriteCount:Int,
+            commentCount: Int,
+            viewcount: Int,
+            writeDatetime: String,
+            writeNickname: String,
+            writerProfileImage: String
+        }
+    
+    실패
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+16. fileUpload(파일 업로드)
+17. getfile(파일 불러오기)
+
+18.patchNickName(닉네임수정)
+    -request
+    {
+        *nickname: string,
+    }
+
+    -response
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+        }
+
+    실패
+
+         {(Http Status - 400[Bad Request])-존재하지 않는 User
+            
+            코드: "NU"
+            message:"No Existed User."
+        }
+
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        }  
+19.patchProfileImage(프로필 이미지 수정)
+
+    -request
+    {
+        profileImage: string
+    }
+
+    -response
+    성공
+        {(Http status -200[OK])
+           
+            코드: "OK"
+            message:"Success."
+        }
+
+    실패
+
+         {(Http Status - 400[Bad Request])-존재하지 않는 User
+            
+            코드: "NU"
+            message:"No Existed User."
+        }
+
+        {(Http Status - 500[Internal Server Error])-DB Error
+            
+            코드: "DBE"
+            message:"Datebase Error."
+        } 
